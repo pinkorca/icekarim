@@ -41,7 +41,8 @@ go build -o icekarim .
 
 ## Deployment
 
-Copy the binary and assets to your server, then create a systemd service:
+1. Copy the compiled binary and the two asset files (`icekarim.webp`, `Hack-Bold.ttf`) to a directory on your server (e.g., `/opt/icekarim`).
+2. Create a new systemd service file at `/etc/systemd/system/icekarim.service`:
 
 ```ini
 [Unit]
@@ -50,8 +51,9 @@ After=network.target
 
 [Service]
 Type=simple
-WorkingDirectory=/root/XD/icekarim
-ExecStart=/root/XD/icekarim/icekarim
+# Update these paths to match where you placed the files
+WorkingDirectory=/opt/icekarim
+ExecStart=/opt/icekarim/icekarim
 Restart=on-failure
 RestartSec=10
 User=root
@@ -60,10 +62,14 @@ User=root
 WantedBy=multi-user.target
 ```
 
+3. Reload systemd and start the bot:
+
 ```bash
 systemctl daemon-reload
 systemctl enable --now icekarim
 ```
+
+Check the live logs anytime using `journalctl -u icekarim -f`.
 
 ## License
 
